@@ -1,24 +1,12 @@
-# This is a sample Python script.
-
-# Press Shift+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
-
-# Press the green button in the gutter to run the script.
 import sys
 import pandas as pd
 import numpy as np
 from Bio.PDB import *
 
 
-#input: 10 matrices of 140*15
-#output:
-#    -0-1-2-3-4-5-6-7-8-9-10
-# 0
-# 1
-# 2
-# 3
-# 4
-#.
+#input: X matrices of 140*15
+#generating pdb file of the chosen reference and txt file with the avg RMSD vector:
+
 
 def generate_rmsd_per_position_vec(reference, others, chosen_pred_index, number_of_positions):
     # print(reference)
@@ -155,7 +143,7 @@ if __name__ == '__main__':
 
 
 
-
+### steps:
 ## input 10 tables  - 140*15
 
 ## RMSD all vd. all results in 10*10 matrix
