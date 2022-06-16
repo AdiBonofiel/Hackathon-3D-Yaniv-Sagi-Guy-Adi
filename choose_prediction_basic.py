@@ -3,6 +3,7 @@ import pandas as pd
 import numpy as np
 from Bio.PDB import *
 import utils
+from predictions_provider import provide_predictions
 
 
 #input: X matrices of 140*15
@@ -164,12 +165,15 @@ def write_rmsd_vec_to_file(rmsd_vec):
 if __name__ == '__main__':
     """
     argv[1] -> protein pdb file path 
-    argv[2:] -> the paths to the prediction (npy files)
     """
     # args = sys.argv[2:]
     # pdb_path = sys.argv[1]
     #args = provide_predictions('./Data/6xw6/6xw6.pdb')
-    preds_arr = read_predictions(sys.argv[2])
+    if len(sys.argv) != 2:
+        sys.stderr.write("please provide a valid pdb file path")
+        exit(1)
+    preds_arr = provide_predictions(sys.argv[1])
+    #preds_arr = read_predictions(predictions)
     seq, _ = get_seq_aa(sys.argv[1], 'H')
     # preds_arr = read_predictions('./Data/predictions.npy')
     # seq, _ = get_seq_aa('./Data/6xw6/6xw6.pdb', 'H')
