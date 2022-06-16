@@ -79,12 +79,12 @@ if __name__ == '__main__':
                        [3, 15, 64, 'relu', 2, 5, 64, 'relu', [1,2,4,8,16], 0.25, 120, 32, 'elu', 0.001]]
     train_models(10, meta_parameters)
 ```
-Second, find the chosen prediction of 10 for using as reference - run_prediction.py
+Second, find the chosen prediction of N for using as reference - run_prediction.py
 ```python
 def generate_predictions_matrices(preds):
     """
-    :param preds: array of 10 matrices of 140*15
-    :return: 10*10 matrix with RMSD between each pair of predictions
+    :param preds: array of N matrices of 140*15
+    :return: N*N matrix with RMSD between each pair of predictions
     """
     rmsds_matrix = np.zeros((len(preds), len(preds)))
     row = 0
@@ -102,7 +102,7 @@ def generate_predictions_matrices(preds):
 
 def get_reference(rmsds_matrix):
     """
-    :param rmsds_matrix: 10 on 10
+    :param rmsds_matrix: N * N
     :return: the index of the chosen prediction
     """
     rmsd_sum = rmsds_matrix.sum(0)
