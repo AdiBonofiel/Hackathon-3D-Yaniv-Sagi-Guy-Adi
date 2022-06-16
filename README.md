@@ -29,7 +29,7 @@ https://user-images.githubusercontent.com/96491832/173994370-ff738297-785e-467e-
 
 # Implementaion details:
 
-## Baseline model - comparing 10 nets approach for accuracy predicting
+## Baseline model - comparing 10 nets approach for accuracy prediction
 First, train 10 networks (architecture from ex4) with different parameters  - 10net.ipynb file.
 ```python
 def train_models(num_models_to_train, meta_parametes):
@@ -179,7 +179,7 @@ def write_reference_to_pdb(seq, coord_matrix, pdb_name):
 ```
 
 
-## Modified Network - deep learning approach for accuracy predicting
+## Modified Network - deep learning approach for accuracy prediction
 
 First, architecture modification is needed for the network emit two tensors - structure prediction and accuracy prediction:
 ```python
