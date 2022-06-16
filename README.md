@@ -81,7 +81,7 @@ if __name__ == '__main__':
 ```
 Second, find the chosen prediction of N for using as reference - run_prediction.py
 
-**Important** - in order to get N predictions, change NUM_OF_MODELS params at 'prediction_provider.py` file to N. Don't change N to larger number then the amount of trained networks.
+**Important** - in order to get N predictions, change NUM_OF_MODELS parameter at 'prediction_provider.py` file to N. Don't change N to larger number then the amount of trained networks.
 ```python
 def generate_predictions_matrices(preds):
     """
