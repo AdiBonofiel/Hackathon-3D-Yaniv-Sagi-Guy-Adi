@@ -52,7 +52,7 @@ First, train 10 networks (architecture from ex4) with different parameters  - 10
                        [3, 15, 64, 'relu', 2, 5, 64, 'relu', [1,2,4,8,16], 0.25, 120, 32, 'elu', 0.001]]
     train_models(10, meta_parameters)
 ```
-Second, find the chosen prediction of 10 for using as reference
+Second, find the chosen prediction of 10 for using as reference - run_prediction.py
 ```python
 def generate_predictions_matrices(preds):
     """
