@@ -59,6 +59,7 @@ def train_models(num_models_to_train, meta_parametes):
         epoch = EPOCHS if meta_parametes[i] == [] else meta_parametes[i][10]
         history = model.fit(X_train, y_train, epochs=epoch, batch_size=batch, validation_data=(X_val, y_val))
         model.save("%s/model%d.tf" %(path_for_models, i))
+if __name__ == '__main__':
     #
     #   Activate the train models only if you wish to edit/change/add the models
     #   Edit the meta_parameters to be as you wish in the models  
