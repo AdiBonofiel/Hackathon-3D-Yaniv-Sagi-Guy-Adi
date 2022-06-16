@@ -169,8 +169,10 @@ if __name__ == '__main__':
     # args = sys.argv[2:]
     # pdb_path = sys.argv[1]
     #args = provide_predictions('./Data/6xw6/6xw6.pdb')
-    preds_arr = read_predictions('./Data/predictions.npy')
-    seq, _ = get_seq_aa('./Data/6xw6/6xw6.pdb', 'H')
+    preds_arr = read_predictions(sys.argv[2])
+    seq, _ = get_seq_aa(sys.argv[1], 'H')
+    # preds_arr = read_predictions('./Data/predictions.npy')
+    # seq, _ = get_seq_aa('./Data/6xw6/6xw6.pdb', 'H')
     ### an example predictions array for testing
     # preds_arr = np.array([[[1,2,3,4,5,6,7,8,7,6,5,4,3,2,1],[0,0,9,8,7,6,5,4,3,2,3,4,5,6,7]], [[1,2,3,4,0,6,7,8,7,6,5,8,3,2,1],[4,0,9,8,7,2,5,4,3,1,3,4,5,6,7]]])
     # seq = "AA"
