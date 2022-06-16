@@ -4,7 +4,7 @@ Hackathon and fun for 3-D folding course
 # User manual:
 
 ### For getting the basic model RMSD vector and chosen structure PDB file:
-1. Run "provide_predictions" function _(after change the PATH_TO_MODELS in the function to the models directory path)_ with path to pdb file argument and      save the returned value as npy file. 
+1. Run "provide_predictions" function in 10nets.ipynb _(after change the PATH_TO_MODELS in the function to the models directory path)_ with path to pdb file argument and      save the returned value as npy file. 
 2. Run choose_prediction_basic.py with arguments <path_to_pdb>, <path_to_npy_file_from_the_previous_step>
 3. 2 files will be generated: 
    - basic_chosen_reference.pdb - the pdb of the chosen prediction.
