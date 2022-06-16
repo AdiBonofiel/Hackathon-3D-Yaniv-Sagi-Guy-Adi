@@ -51,10 +51,10 @@ Next, we design two losses, one per each output:
 
 ```python
 def rmsd_loss(y_true, y_pred):
-   mse_func = tf.keras.losses.MeanSquaredError(reduction=tf.keras.losses.Reduction.NONE)
-   mse = mse_func(y_true, y_pred)
-   rmsd = tf.sqrt(((mse * 15) / 5))
-   return rmsd 
+    mse_func = tf.keras.losses.MeanSquaredError(reduction=tf.keras.losses.Reduction.NONE)
+    mse = mse_func(y_true, y_pred)
+    rmsd = tf.sqrt(((mse * 15) / 5))
+    return rmsd 
 
 def loss_acc_fn(y_true, y_pred, coef):
     return coef * rmsd_loss(y_true, y_pred)
