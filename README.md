@@ -1,7 +1,22 @@
 # Hackathon-3D-Yaniv-Sagi-Guy-Adi
 Hackathon and fun for 3-D folding course 
 
-# User manual:
+# Getting started:
+
+1. After clonning the repository, install requierments:
+
+`pip install -r requirments.txt`
+
+2. run perdiction by:
+
+`python run_prediction.py <path_to_pdb> <method>`
+
+ When method is either `baseline` or `advanced`.
+ 
+ A pdb file contain the predicted structure and a txt file with confidence level of each residu prediction, will be saved in your home directory.
+
+
+
 
 ### For getting the basic model RMSD vector and chosen structure PDB file:
 1. Run choose_prediction_basic.py with argument <path_to_pdb>
