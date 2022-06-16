@@ -30,7 +30,7 @@ https://user-images.githubusercontent.com/96491832/173994370-ff738297-785e-467e-
 # Implementaion details:
 
 ## Baseline model - comparing 10 nets approach for accuracy prediction
-First, train N networks (architecture from ex4) as num_models_to_train variable, with different parameters (provide them in the meta_parameters list) - `10net.ipynb` file.\n
+First, train N networks (architecture from ex4) as num_models_to_train variable, with different parameters (provide them in the meta_parameters list) - `10net.ipynb` file.
 **Important** - provide N meta parameters that matches the number of networks you wish to train.
 Meta parameters as needed to be provided: [amount of res1 blocks, res1 kernel size, res1 kernel num, activation function res1, amount of res2 blocks, res2 kernel size, res2 kernel num, activation function res2, dilations, dropout value, amount of epochs, batch size, activation function dropout, learning rate]
 ```python
