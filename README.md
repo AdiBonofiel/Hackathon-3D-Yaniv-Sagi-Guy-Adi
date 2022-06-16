@@ -30,7 +30,129 @@ https://user-images.githubusercontent.com/96491832/173994370-ff738297-785e-467e-
 # Implementaion details:
 
 ## Baseline model - comparing 10 nets approach for accuracy predicting
+First, train 10 networks (architecture from ex4) with different parameters  - 10net.ipynb file.
+```python
+    #
+    #   Activate the train models only if you wish to edit/change/add the models
+    #   Edit the meta_parameters to be as you wish in the models  
+    #
 
+    # res1_blocks = 3, res1_ker_size = 15, res1_ker_num = 64, activation_res1 = 'relu',
+    #                 res2_blocks = 3, res2_ker_size = 3, res2_ker_num = 32, activation_res2 = 'relu',
+    #                 dilaitons = [1, 2, 4, 8], dropout = 0.15, epoch = 60, 
+    #                 batch =32, activation_dropout = 'elu', LR= 0.01
+    meta_parameters = [[],[3, 15, 64, 'relu', 5, 5, 32, 'relu', [1,2,4], 0.2, 50, 32, 'elu', 0.01],
+                       [3, 15, 64, 'relu', 3, 5, 24, 'relu', [2,4,8,16], 0.25, 60, 64, 'elu', 0.01],
+                       [3, 25, 48, 'relu', 2, 5, 32, 'relu', [1,2,4,8,16], 0.15, 60, 32, 'elu', 0.01],
+                       [3, 15, 64, 'relu', 5, 5, 32, 'gelu', [1,2,4,8], 0.2, 60, 32, 'elu', 0.01],
+                       [3, 15, 64, 'softplus', 3, 3, 32, 'softplus', [1,2,4,8], 0.15, 60, 32, 'elu', 0.01],
+                       [3, 15, 64, 'elu', 5, 3, 64, 'elu', [1,2,4,16], 0.2, 60, 32, 'relu', 0.01],
+                       [3, 15, 64, 'relu', 3, 5, 32, 'LeakyReLU', [1,2,4,8], 0.25, 60, 32, 'elu', 0.01], #<----
+                       [4, 15, 64, 'silu', 5, 3, 32, 'silu', [1,2,4], 0.2, 50, 64, 'elu', 0.01],
+                       [3, 15, 64, 'relu', 2, 5, 64, 'relu', [1,2,4,8,16], 0.25, 120, 32, 'elu', 0.001]]
+    train_models(10, meta_parameters)
+```
+Second, find the chosen prediction of 10 for using as reference
+```python
+def generate_predictions_matrices(preds):
+    """
+    :param preds: array of 10 matrices of 140*15
+    :return: 10*10 matrix with RMSD between each pair of predictions
+    """
+    rmsds_matrix = np.zeros((len(preds), len(preds)))
+    row = 0
+    col = 0
+    for p_r in preds:
+        for p_c in preds:
+            rmsds_matrix[row][col] = np.sqrt(np.mean((p_r - p_c) ** 2))
+            col += 1
+        col = 0
+        row += 1
+    # #np.sqrt(np.mean((predictions - targets) ** 2))
+    return rmsds_matrix
+
+
+
+def get_reference(rmsds_matrix):
+    """
+    :param rmsds_matrix: 10 on 10
+    :return: the index of the chosen prediction
+    """
+    rmsd_sum = rmsds_matrix.sum(0)
+    min_index = np.argmin(rmsd_sum)
+    return min_index
+    
+def write_rmsd_vec_to_file(rmsd_vec, protein_name):
+    f = open("baseline_model_" + protein_name + '_acc.txt', 'w')
+    for r in rmsd_vec:
+        f.write(str(r))
+        f.write('\n')
+    f.close()
+```
+Third, generate average RMSD per position and write it to txt file.
+```python
+
+def generate_rmsd_per_position_vec(reference, others, chosen_pred_index, number_of_positions):
+    # print(reference)
+    # print(others)
+    p = 0
+    final_vec = []
+    for i in range(number_of_positions):
+        cur_pos_vec = []
+        for pred in others:
+            if p == chosen_pred_index:
+                p += 1
+                continue
+            else:
+                cur_pred = pred[0][i]
+                cur_ref = reference[0][i]
+                cur_pos_vec.append(np.sqrt(np.mean((cur_pred - cur_ref) ** 2)))
+                p += 1
+        p = 0
+        cur_mean = np.mean(cur_pos_vec)
+        final_vec.append(cur_mean)
+
+    return final_vec
+```
+
+Forth, write chosen reference to pdb file. 
+```python
+def write_reference_to_pdb(seq, coord_matrix, pdb_name):
+    """
+    Receives a sequence (String) and the output matrix of the neural network (coord_matrix, numpy array)
+    and creates from them a PDB file named pdb_name.pdb.
+    :param seq: protein sequence (String), with no padding
+    :param coord_matrix: output np array of the nanobody neural network, shape = (NB_MAX_LENGTH, OUTPUT_SIZE)
+    :param pdb_name: name of the output PDB file (String)
+    """
+    BACKBONE_ATOMS = ["N", "CA", "C", "O", "CB"]
+    ATOM_LINE = "ATOM{}{}  {}{}{} {}{}{}{}{:.3f}{}{:.3f}{}{:.3f}  1.00{}{:.2f}           {}\n"
+    END_LINE = "END\n"
+    k = 1
+
+    with open(f"{pdb_name}.pdb", "w") as pdb_file:
+        for i, aa in enumerate(seq):
+            third_space = (4 - len(str(i))) * " "
+            for j, atom in enumerate(BACKBONE_ATOMS):
+                if not (aa == "G" and atom == "CB"):  # GLY lacks CB atom
+                    x, y, z = coord_matrix[i][3 * j], coord_matrix[i][3 * j + 1], coord_matrix[i][3 * j + 2]
+                    b_factor = 0.00
+                    first_space = (7 - len(str(k))) * " "
+                    second_space = (4 - len(atom)) * " "
+                    forth_space = (12 - len("{:.3f}".format(x))) * " "
+                    fifth_space = (8 - len("{:.3f}".format(y))) * " "
+                    sixth_space = (8 - len("{:.3f}".format(z))) * " "
+                    seventh_space = (6 - len("{:.2f}".format(b_factor))) * " "
+
+                    pdb_file.write(
+                        ATOM_LINE.format(first_space, k, atom, second_space, Polypeptide.one_to_three(aa), "H",
+                                         third_space,
+                                         i, forth_space, x, fifth_space, y, sixth_space, z, seventh_space,
+                                         b_factor, atom[0]))
+                    k += 1
+
+        pdb_file.write(END_LINE)
+```
 
 
 ## Modified Network - deep learning approach for accuracy predicting
