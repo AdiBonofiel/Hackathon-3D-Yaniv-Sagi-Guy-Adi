@@ -32,15 +32,38 @@ https://user-images.githubusercontent.com/96491832/173994370-ff738297-785e-467e-
 ## Baseline model - comparing 10 nets approach for accuracy predicting
 First, train 10 networks (architecture from ex4) with different parameters  - 10net.ipynb file.
 ```python
+def train_models(num_models_to_train, meta_parametes):
+    '''
+    meta params: 0.res1_blocks, 1.res1_ker_size, 2.res1_ker_num, 3.activation_res1,
+    4.res2_blocks, 5.res2_ker_size, 6.res2_ker_num, 7.activation_res2,
+    8.dilaitons, 9.dropout, 10.epoch, 11.batch, 12.activation_dropout 13.LR
+    '''
+    path_for_models =  "/content/drive/MyDrive/hackathonPrivate/models"
+    X = np.load('/content/drive/MyDrive/hackathonPrivate/files/train_input.npy')
+    Y = np.load('/content/drive/MyDrive/hackathonPrivate/files/train_labels.npy')
+
+    X_train, X_val, y_train, y_val  = train_test_split(X, Y, test_size=0.2, random_state=1)
+    for i in range(num_models_to_train):
+        print("model %d" %i)
+        if (meta_parametes[i] == []):
+          model = build_network()
+          my_optimizer= tf.keras.optimizers.Adam(learning_rate=LR)
+
+        else:
+          model = build_network(meta_parametes[i][0], meta_parametes[i][1], meta_parametes[i][2], meta_parametes[i][3], meta_parametes[i][4], 
+                                meta_parametes[i][5], meta_parametes[i][6],meta_parametes[i][7], meta_parametes[i][8], meta_parametes[i][9], 
+                                meta_parametes[i][12])
+          my_optimizer= tf.keras.optimizers.Adam(learning_rate=meta_parametes[i][13])
+        model.compile(optimizer=my_optimizer, loss="mse")
+        batch = BATCH if meta_parametes[i] == [] else meta_parametes[i][11]
+        epoch = EPOCHS if meta_parametes[i] == [] else meta_parametes[i][10]
+        history = model.fit(X_train, y_train, epochs=epoch, batch_size=batch, validation_data=(X_val, y_val))
+        model.save("%s/model%d.tf" %(path_for_models, i))
     #
     #   Activate the train models only if you wish to edit/change/add the models
     #   Edit the meta_parameters to be as you wish in the models  
     #
 
-    # res1_blocks = 3, res1_ker_size = 15, res1_ker_num = 64, activation_res1 = 'relu',
-    #                 res2_blocks = 3, res2_ker_size = 3, res2_ker_num = 32, activation_res2 = 'relu',
-    #                 dilaitons = [1, 2, 4, 8], dropout = 0.15, epoch = 60, 
-    #                 batch =32, activation_dropout = 'elu', LR= 0.01
     meta_parameters = [[],[3, 15, 64, 'relu', 5, 5, 32, 'relu', [1,2,4], 0.2, 50, 32, 'elu', 0.01],
                        [3, 15, 64, 'relu', 3, 5, 24, 'relu', [2,4,8,16], 0.25, 60, 64, 'elu', 0.01],
                        [3, 25, 48, 'relu', 2, 5, 32, 'relu', [1,2,4,8,16], 0.15, 60, 32, 'elu', 0.01],
