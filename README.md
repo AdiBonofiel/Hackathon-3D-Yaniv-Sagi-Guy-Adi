@@ -29,6 +29,10 @@ https://user-images.githubusercontent.com/96491832/173994370-ff738297-785e-467e-
 
 # Implementaion details:
 
+## Baseline model - comparing 10 nets approach for accuracy predicting
+
+
+
 ## Modified Network - deep learning approach for accuracy predicting
 
 First, architecture modification is needed for the network emit two tensors - structure prediction and accuracy prediction:
@@ -75,3 +79,4 @@ for epoch in range(epochs):
         grads = tape.gradient([rmsd_loss_value, acc_loss_value], model.trainable_weights)
         optimizer.apply_gradients(zip(grads, model.trainable_weights))
 ```
+
