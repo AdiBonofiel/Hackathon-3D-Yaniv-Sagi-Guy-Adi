@@ -5,7 +5,7 @@ Hackathon and fun for 3-D folding course
 
 1. After clonning the repository, install requierments:
 
-`pip install -r requirments.txt`
+`pip install -r requirements.txt`
 
 2. run perdiction by:
 
